@@ -365,6 +365,7 @@ table p{
 }
 .descriptionImage{
   max-height: 320px;
+  max-width: 210px;
   align-self: center;
   border-radius: 5px;
 }
