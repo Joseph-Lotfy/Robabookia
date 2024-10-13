@@ -1,4 +1,5 @@
 /* styles.css */
+/* -------- Body Begin ------------ */
 :root{
   --primary : #f3f3f3;
   --secondry :#ffffff;
@@ -6,7 +7,7 @@
 body {
   font-family: Arial, sans-serif;
   margin: 0;
-  background-color: var(--primary)!important;
+  background-color: #FEFAE0!important;
   max-width: 100vw !important;
   height: 300vh;
   font-family: "Roboto Mono", monospace;
@@ -31,24 +32,147 @@ body {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
-
 /*------------ form Container ------------*/
 .container{
-
   margin-inline: auto;
-
 }
-#book-search-form {
+
+html {
+  scroll-behavior: smooth;
+}
+
+a {
+  text-decoration: none;
+  display: block;
+}
+
+ul {
+  list-style: none;
+}
+.bodyContainer{
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: center;
+  align-items: flex-start;
+}
+.container {
+  padding-left: 0px;
+  padding-right: 25px;
+  margin: auto;
+}
+/* -------- Body end ------------ */
+
+/* Book Cover Heading */
+
+/* --------line Begin ------------*/
+.line{
+  height: 40px;
+  background-color: var(--secondry);
+  width: 100%;
+  margin-top: 120px;
+  border-radius: 5px;
+  margin-bottom: 40px;
+  display: flex;
+  align-items: center;
+  font-size: 20px !important;
+  /* color: gray !important; */
+  padding: 10px;
+  flex-direction: row;
+  box-shadow: 0 0 10px rgb(237, 232, 232);
+}
+.line .bi-house-door-fill{
+  margin-left: 10px;
+  color: gray !important;
+}
+.line .fa-angle-right{
+  font-size: 55px;
+
+  /* -webkit-text-stroke: 1px white; */
+}
+svg {
+  width: 21px; /* Adjust to your desired width */
+  height: auto;
+  color: gray;
+  transform: rotate(180deg);
+  margin: 10px;
+  opacity: .4;
+}
+.line p{
+  margin-bottom: 0;
+  padding-right: 10px;
+  font-size: 18px;
+}
+
+/* -------- line end   ------------ */
+
+
+/* -------- Filter Begin ------------ */
+.filter-section {
+  background-color: var(--secondry);
+  padding: 20px;
+  border-radius: 8px;
+  font-family: 'Arial', sans-serif;
+  height: fit-content;
+  position: sticky;
+  top: 10px;
+}
+
+.filter-group {
+  margin-bottom: 20px;
+}
+.filter-group label{
+  margin-bottom: 10px;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+.genreContainer{
+  padding: 0;
+}
+.genre {
+  width: 100%;
+  background-color: var(--secondry);
+  border: 1px solid;
+  border-color: black;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  color: black;
+  transition: border-color 0.2s, color 0.2s; 
+}
+
+.genre.active {
+  border: 1px solid;
+  border-color: rgb(3, 190, 3);
+  color: rgb(3, 190, 3);
+}
+
+
+.filter-group .sort {
+  font-size: 16px;
+}
+
+/* -------- Filter end   ------------ */
+
+
+/* -------- Book C0ntainer Begins  ------------ */
+#book-search-form,  #book-search-form-2{
   text-align: right;
   /* position: fixed; */
   height: fit-content;
-  margin-left: auto;
-  left: 40px;
   z-index: 1000;
-  /* opacity: 0;
-  visibility: hidden;  
-  transition: opacity 0.2s ease; */
-  margin-inline: auto;
+  margin-bottom: 10px;
+  margin: auto;
+}
+#book-search-form-2{
+  margin-bottom: 30px;
+  display: none;
 }
 .formElements{
   position: relative;
@@ -56,21 +180,131 @@ body {
 input[type="text"] {
   padding: 10px;
   font-size: 16px;
-  min-width: 250px;
-
   border-radius: 10px;
 }
-
+#book-search-input{
+  min-width: 250px;
+}
 .formElements .searchButton {
   color: rgb(0, 0, 0);
   position: absolute;
-  right: 0;
+  right: 0px;
   border: none;
   background-color: transparent;
   top: 11px;
-  right: 11px;
+  padding-inline: 12px;
+  background-color: brown;
+  color: white;
+  height: 44px;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+.cards-container {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px; /* Spacing between cards */
+  padding: 30px;
+  row-gap: 70px;
+  width: 100%;
 }
 
+.card {
+  background-color: var(--secondry) !important;
+  border-radius: 10px;
+  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  padding: auto;
+  width: 300px;
+  transition: transform 0.3s ease;
+  height: 400px;
+  margin: 0; 
+  padding: 10px;
+}
+
+.haveHover.card:hover {
+  transform: translateY(-5px);
+}
+
+.card-img {
+  width: 100%;
+  height: 300px;
+  padding: 30px;
+  position: relative;
+}
+
+.card-img img {
+  position: absolute;
+  left: 50%; /**/
+  transform: translate(-50%, 0); /**/
+  top: -15%;
+  height: 316px;
+  width: auto;
+  max-width: 250px;
+  border-radius: 15px;
+  margin-bottom: 15px;
+  transition: 0.2s ease-in-out;
+  box-shadow: 0 2px 10px rgb(0 0 0 / 50%);
+  cursor: pointer;
+  align-items: center;
+}
+@media (min-width: 400px) {
+  .haveHover.card:hover .card-img img {
+    top: -40%;
+    height: 400px;
+    /* width: 300px; */
+    max-width: 300px;
+    animation: pop 0.3s ease forwards;
+  }
+}
+.card-info {
+  margin-bottom: 30px;
+  margin-top: auto;
+}
+
+.card-info h2 {
+  font-size: 20px;
+  color: #333;
+  font-weight: bold;
+}
+
+.card-info p {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-around;
+}
+
+button {
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-details {
+  color: #000;
+  border: 1px solid #000;
+  transition: 0.3s ease-in-out;
+}
+
+.haveHover.btn-details:hover {
+  background-color: black;
+  color: #fff;
+}
+
+.btn-buy {
+  background-color: #000;
+  color: #fff;
+}
+
+.haveHover button:hover {
+  opacity: 0.8;
+}
 
 /*------------ Cart ------------*/
 .cart{
@@ -90,11 +324,11 @@ input[type="text"] {
   top:0px;
   font-size: 13px;
   left: 18px;
-  background-color: #FEFAE0;
-  color: rgb(0, 0, 0);
+  background-color: red;
+  color: rgb(255, 255, 255);
   border-radius: 50%;
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   text-align: center;
   display: flex;
   justify-content: center;
@@ -316,6 +550,7 @@ table p{
   margin-right: auto;
   left: 0;
   right: 0;
+  max-width: 100%;
 }
 .popoverr-visible {
   display: flex !important; 
@@ -335,7 +570,7 @@ table p{
   border: none;
   cursor: pointer;
   font-size: 18px;
-  /* background-color: rgb(177, 15, 46); */
+  background-color: transparent;
   color: rgb(0, 0, 0);
   border-radius: 5px;
   width: 20px;
@@ -362,12 +597,14 @@ table p{
   max-height: 80%;
   font-size: 13.5px;
   font-weight: 400;
+  max-height: 200px;
 }
 .descriptionImage{
   max-height: 320px;
   max-width: 210px;
   align-self: center;
   border-radius: 5px;
+  min-width: 200px;
 }
 .descriptionBookDetails{
   display: flex;
@@ -383,6 +620,7 @@ a{
   border-radius: 5px;
   padding: 10px 15px;
   cursor: pointer;
+  margin-top: 10px;
 
 }
 .bookDescription{
@@ -396,13 +634,10 @@ flex-grow: 1;
 /* .popoverr{
   display: flex;
 } */
+ .navbar-toggler{
+  display: none;
+ }
 @media screen  and (width < 800px) {
-  .book{
-    flex-direction: column;
-    gap: 10px;
-    justify-content: center;
-    align-items: center;
-  }
   .showDescription{
 
     top: 80%;
@@ -431,4 +666,67 @@ flex-grow: 1;
     flex-direction: column;
   }
 
+}
+@media (max-width: 768px) {
+  .filter-group label {
+      font-size: 14px;
+  }
+  nav.navbar{
+    /* margin-left: auto; */
+    display: none;
+  }
+  .navbar-toggler{
+    border: none !important;
+    padding-left: 0 !important;
+    display: block;
+    text-align: right;
+
+  }
+  .navbar-toggler:focus{
+    outline: none !important;
+    box-shadow: none !important;
+  
+  }
+  .navbar-toggler.focus{
+    outline: none !important;
+  }
+  .label1 {
+      font-size: 18px;
+  }
+
+  .label2, .sort {
+      font-size: 16px;
+  }
+
+  input[type="text"], select {
+      font-size: 14px;
+  }
+  .filter-section{
+    display: none;
+  }
+  nav.navbar{
+    display: block;
+  }
+  .offcanvas{
+    max-width: 250px !important;
+  }
+  .line{
+    margin-bottom: 20px;
+    justify-content: space-between;
+  }
+  #book-search-form-2{
+    display: block !important;
+    max-width: 400px;
+  }
+  .mobileHide{
+    display: none;
+  }
+}
+@media (max-width: 400px) {
+  .cards-container{
+    padding-inline: 0;
+  }
+  .btn-buy{
+    width: 131px;
+  }
 }

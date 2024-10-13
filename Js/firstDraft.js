@@ -1,40 +1,6 @@
-/*---------Search Container --------------*/
-// document.getElementById('searchContainer').addEventListener('click', (e) =>{
-//     if (!e.target.closest('.book-search-form')) {
-//         let parent = e.target.closest('.search');
-//         const form = parent.querySelector('.book-search-form');
-//         if (form.classList.contains('show')) {
-//             // Start fading out by removing the show class
-//             form.classList.remove('show');
-//             // Wait for the opacity transition to finish before hiding the element
-//             setTimeout(() => {
-//                 form.style.visibility = 'hidden';
-//             }, 200); // This matches the transition duration (0.5s)
-            
-//         } else {
-//             // Make it visible immediately, then trigger the opacity animation
-//             form.style.visibility = 'visible';
-//             form.classList.add('show');
-//             console.log(form)
-//             const bodyClickHandler = (e) => {
-//                 if (!e.target.closest('.book-search-form') && !e.target.closest('.search')) {
-//                     form.classList.remove('show');
-                    
-//                     // Wait for the opacity transition to finish before hiding the element
-//                     setTimeout(() => {
-//                         form.style.visibility = 'hidden';
-//                     }, 200); // This matches the transition duration (0.2s)
-                    
-//                     // Remove the body event listener once the task is done
-//                     document.removeEventListener('click', bodyClickHandler);
-//                 }
-//             };
-//             document.addEventListener('click', bodyClickHandler);
-//         }
-//     }
-// })
 
 /*---------Fetch Book Detaiks-------------*/
+console.log(1)
 document.getElementById('book-search-form').addEventListener('submit', function(e) {
     const container = document.getElementById('cards-container');
     container.innerHTML = '<div class="loader" id="loader"></div>';
@@ -45,25 +11,35 @@ document.getElementById('book-search-form').addEventListener('submit', function(
     showLoader(); // Show the loader when fetching starts
     fetchBookCovers(query);
 });
+document.getElementById('book-search-form-2').addEventListener('submit', function(e) {
+    const container = document.getElementById('cards-container');
+    container.innerHTML = '<div class="loader" id="loader"></div>';
+    e.preventDefault(); // Prevent the page from refreshing
+    const query = document.getElementById('book-search-input-2').value;
+    // let dropDown = document.getElementById('dropDown');
+    // dropDown.innerHTML = "Choose a Genre"
+    showLoader(); // Show the loader when fetching starts
+    fetchBookCovers(query);
+});
 function fetchBookCovers(query) {
-    fetch(`https://openlibrary.org/search.json?title=${query}`)
+    fetch(`https://www.googleapis.com/books/v1/volumes?q=${query}&maxResults=6&orderBy=relevance&langRestrict=en`)
         .then(response => response.json())
         .then(data => {
-            const books = data.docs.slice(0, 6); // Get the first 6 books
+            const books = data.items || []; // Google Books returns an 'items' array
             if (books.length > 0) {
-                const descriptionPromises = books.map(book => getBookDetails(book.key));
+                const descriptionPromises = books.map(book => getBookDetails(book.id)); // Change book key to id
                 Promise.all(descriptionPromises).then(descriptions => {
                     displayBookCovers(books, descriptions);
                 });
             } else {
                 displayError('No books found');
-                hideLoader(); // Hide the loader if no books found
+                hideLoader();
             }
         })
         .catch(error => {
             console.error('Error fetching books:', error);
             displayError('An error occurred');
-            hideLoader(); // Hide the loader in case of an error
+            hideLoader();
         });
 }
 /*---------show and Hide Loader-------------*/
@@ -80,57 +56,56 @@ function displayBookCovers(books, details) {
     const container = document.getElementById('cards-container');
     container.innerHTML = ''; // Clear previous results
     books.forEach((book, index) => {
-        const coverId = book.cover_i;
-        const title = book.title;
-        const author = book.author_name ? book.author_name.join(', ') : 'Unknown Author';
-        const bookUrl = findEnglishEdition(book); // Get the English edition URL
+        const volumeInfo = book.volumeInfo;
+        const coverUrl = volumeInfo.imageLinks?.thumbnail || 'default-cover.jpg'; // Fallback if no cover
+        const title = volumeInfo.title || 'No title available';
+        const author = volumeInfo.authors ? volumeInfo.authors.join(', ') : 'Unknown Author';
         const descriptionText = details[index].description || 'No description available';
-        const genres = details[index].subjects || 'No genre available';
-        const cleanedDescription = cleanDescription(descriptionText).slice(0,400) + "..."; 
-        const randomNumber = coverId%1000;
-        if (coverId) {
-            const coverUrl = `https://covers.openlibrary.org/b/id/${coverId}-L.jpg`;
-            container.innerHTML += `
-                <div class="card haveHover" data-genre="${genres}">
-                  <div class="card-img">
-                   <img class="bookImg" src="${coverUrl}" alt="Book Cover">
-                  </div>
-                    <div class="card-info">
-                        <h2 class="bookTitle">${title}</h2>
-                        <p>${author}</p>
-                        <div class="icons">
-                            <p class="p3 price">$${randomNumber}</p>
-                        </div>
-                        <div class="buttons">
-                            <button class="btn-details showDescription haveHover">Description</button>
-                            <button class="btn-buy haveHover buy" id="${coverId}">Buy <i class="fa-solid fa-cart-plus"></i></button>
-                        </div>
+        const genres = details[index].categories ? details[index].categories : 'No genre available';
+        console.log(genres)
+        const cleanedDescription = cleanDescription(descriptionText);
+        const randomNumber = Math.floor(Math.random() * 1000); // Generate random price
+        console.log(cleanedDescription)
+        container.innerHTML += `
+            <div class="card haveHover" data-genre="${genres}">
+              <div class="card-img">
+               <img class="bookImg" src="${coverUrl}" alt="Book Cover">
+              </div>
+                <div class="card-info">
+                    <h2 class="bookTitle">${title}</h2>
+                    <p>${author}</p>
+                    <div class="icons">
+                        <p class="p3 price">$${randomNumber}</p>
                     </div>
-                    <div class="popoverr">
-                        <div class="descriptionBox">
-                            <button class="hideDescription">x</button>   
-                            <div class="descriptionBookDetails">
-                                <img class="descriptionImage" src="${coverUrl}" alt="Cover of ${title}">
+                    <div class="buttons">
+                        <button class="btn-details showDescription haveHover">Description</button>
+                        <button class="btn-buy haveHover buy" id="${book.id}">Buy <i class="fa-solid fa-cart-plus"></i></button>
+                    </div>
+                </div>
+                <div class="popoverr">
+                    <div class="descriptionBox">
+                        <button class="hideDescription">x</button>   
+                        <div class="descriptionBookDetails">
+                            <img class="descriptionImage" src="${coverUrl}" alt="Cover of ${title}">
+                            <div>
                                 <div>
-                                    <div>
-                                        <h4>${title}</h4>
-                                        <p class="descName">${author}</p>
-                                    </div>
-                                    <p class="descText">${cleanedDescription}</p>
-                                    <a href="${bookUrl}" target="_blank">
-                                        <button type="button" class="moreDetails btn-secondary" class="moreDetails">See more Details</button>
-                                    </a>
+                                    <h4>${title}</h4>
+                                    <p class="descName">${author}</p>
                                 </div>
+                                <div class="descText">${cleanedDescription}</div>
+                                <a href="${volumeInfo.infoLink}" target="_blank">
+                                    <button type="button" class="moreDetails btn-secondary">See more Details</button>
+                                </a>
                             </div>
                         </div>
                     </div>
-              </div>
-
-            `;
-        } 
+                </div>
+          </div>
+        `;
     });
     hideLoader(); // Hide the loader after displaying results
 }
+
 
 /*---------Hide Description-------------*/
 document.body.addEventListener('click', (e) => {
@@ -333,31 +308,29 @@ function findEnglishEdition(book) {
 }
 
 // Function to fetch the book description using the work key
-function getBookDetails(workKey) {
-    return fetch(`https://openlibrary.org${workKey}.json`)
+function getBookDetails(bookId) {
+    return fetch(`https://www.googleapis.com/books/v1/volumes/${bookId}`)
         .then(response => response.json())
         .then(data => {
-            // Get the description and subjects (genres)
-            const description = data.description ? 
-                (typeof data.description === 'string' ? data.description : data.description.value) : 
-                'No description available';
-            const subjects = data.subjects ? data.subjects.join(', ') : 'No genre available'; // Join subjects into a string
+            const description = data.volumeInfo.description || 'No description available';
+            const categories = data.volumeInfo.categories ? data.volumeInfo.categories : 'No genre available';
             return {
                 description: description,
-                subjects: subjects // Return the subjects (genres) as part of the object
+                categories: categories
             };
         })
         .catch(error => {
             console.error('Error fetching book details:', error);
             return {
                 description: 'No description available',
-                subjects: 'No genre available' // Return default message in case of an error
+                categories: 'No genre available'
             };
         });
 }
 
+
 function displayError(message) {
-    const container = document.getElementById('book-cover-container');
+    const container = document.getElementById('cards-container');
     container.innerHTML = `<p>${message}</p>`;
 }
 

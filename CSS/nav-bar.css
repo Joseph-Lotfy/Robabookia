@@ -54,7 +54,7 @@ right: 0;
 }
 
 /* Navbar Container */
-.navbar {
+div.navbar {
   /* position: fixed; */
   justify-self: center;
   display: flex;
